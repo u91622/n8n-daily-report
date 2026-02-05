@@ -1,5 +1,5 @@
 {
-  "name": "Daily Ad Reporting (AI Enhanced - HTML)",
+  "name": "Daily Ad Reporting (AI Enhanced - HTML Clean)",
   "nodes": [
     {
       "parameters": {
@@ -44,13 +44,7 @@
       ],
       "retryOnFail": true,
       "maxTries": 3,
-      "waitBetweenTries": 5000,
-      "credentials": {
-        "googleSheetsOAuth2": {
-          "id": "YOUR_CREDENTIAL_ID",
-          "name": "Google Sheets Account"
-        }
-      }
+      "waitBetweenTries": 5000
     },
     {
       "parameters": {
@@ -109,13 +103,7 @@
       ],
       "retryOnFail": true,
       "maxTries": 3,
-      "waitBetweenTries": 5000,
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "YOUR_CEREBRAS_CREDENTIAL_ID",
-          "name": "Cerebras API Key"
-        }
-      }
+      "waitBetweenTries": 5000
     },
     {
       "parameters": {
@@ -147,13 +135,7 @@
       "position": [
         1280,
         240
-      ],
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "YOUR_GMAIL_CREDENTIAL_ID",
-          "name": "Gmail Account"
-        }
-      }
+      ]
     }
   ],
   "connections": {
