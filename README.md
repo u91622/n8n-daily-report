@@ -5,7 +5,7 @@
 ## 功能特色
 - **自動化排程**：每日早上 9:00 自動執行。
 - **數據計算**：自動計算點擊率 (CTR)、轉換率 (CVR) 與每次轉換成本 (CPA)。
-- **AI 洞察**：使用 Llama-3 70B (via Cerebras) 分析數據並提供優化建議。
+- **AI 洞察**：使用 `gpt-oss-120b` (via Cerebras) 分析數據並提供優化建議。
 - **Self-healing**：針對 API 請求失敗 (如 Google Sheets, AI 服務) 內建 Retry 機制，提高穩定性。
 
 ## 前置準備
@@ -45,4 +45,4 @@
 - **Google Sheet 讀不到?**: 確保 n8n 有權限存取該檔案 (通常在 OAuth 設定時授權)。
 
 ---
-*Created by Antigravity Agent*
+*Created using Antigravity IDE*

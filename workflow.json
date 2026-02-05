@@ -85,7 +85,7 @@
           "parameters": [
             {
               "name": "model",
-              "value": "llama3.1-70b"
+              "value": "gpt-oss-120b"
             },
             {
               "name": "messages",
