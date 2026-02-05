@@ -1,5 +1,5 @@
 {
-  "name": "Daily Ad Reporting (AI Enhanced)",
+  "name": "Daily Ad Reporting (AI Enhanced - HTML)",
   "nodes": [
     {
       "parameters": {
@@ -17,7 +17,7 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.1,
       "position": [
-        460,
+        380,
         240
       ]
     },
@@ -39,7 +39,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "position": [
-        680,
+        560,
         240
       ],
       "retryOnFail": true,
@@ -54,14 +54,14 @@
     },
     {
       "parameters": {
-        "jsCode": "// Calculate metrics and format data for AI\nconst items = $input.all();\nconst formattedData = [];\n\nfor (const item of items) {\n  const json = item.json;\n  const impressions = parseFloat(json.Impressions);\n  const clicks = parseFloat(json.Clicks);\n  const conversions = parseFloat(json.Conversions);\n  const spend = parseFloat(json.Spend);\n\n  const ctr = impressions > 0 ? ((clicks / impressions) * 100).toFixed(2) : 0;\n  const cvr = clicks > 0 ? ((conversions / clicks) * 100).toFixed(2) : 0;\n  const cpa = conversions > 0 ? (spend / conversions).toFixed(2) : 0;\n\n  formattedData.push({\n    Date: json.Date,\n    Campaign: json.Campaign,\n    Impressions: impressions,\n    Clicks: clicks,\n    Conversions: conversions,\n    Spend: spend,\n    CTR: ctr + '%',\n    CVR: cvr + '%',\n    CPA: '$' + cpa\n  });\n}\n\n// Create a markdown table string for the AI prompt\nlet tableString = '| Date | Campaign | Cost | CTR | CVR | CPA |\\n|---|---|---|---|---|---|\\n';\nformattedData.forEach(row => {\n  tableString += `| ${row.Date} | ${row.Campaign} | $${row.Spend} | ${row.CTR} | ${row.CVR} | ${row.CPA} |\\n`;\n});\n\nreturn {\n  json: {\n    tableString,\n    totalRecords: formattedData.length\n  }\n};"
+        "jsCode": "// Calculate metrics and format data for AI\nconst items = $input.all();\nconst formattedData = [];\n\nfor (const item of items) {\n  const json = item.json;\n  const impressions = parseFloat(json.Impressions) || 0;\n  const clicks = parseFloat(json.Clicks) || 0;\n  const conversions = parseFloat(json.Conversions) || 0;\n  const spend = parseFloat(json.Spend) || 0;\n\n  const ctr = impressions > 0 ? ((clicks / impressions) * 100).toFixed(2) : 0;\n  const cvr = clicks > 0 ? ((conversions / clicks) * 100).toFixed(2) : 0;\n  const cpa = conversions > 0 ? (spend / conversions).toFixed(2) : 0;\n\n  formattedData.push({\n    Date: json.Date,\n    Campaign: json.Campaign,\n    Impressions: impressions,\n    Clicks: clicks,\n    Conversions: conversions,\n    Spend: spend,\n    CTR: ctr + '%',\n    CVR: cvr + '%',\n    CPA: '$' + cpa\n  });\n}\n\n// Create a markdown table string for the AI prompt\nlet tableString = '| Date | Campaign | Cost | CTR | CVR | CPA |\\n|---|---|---|---|---|---|\\n';\nformattedData.forEach(row => {\n  tableString += `| ${row.Date} | ${row.Campaign} | $${row.Spend} | ${row.CTR} | ${row.CVR} | ${row.CPA} |\\n`;\n});\n\nreturn {\n  json: {\n    tableString,\n    totalRecords: formattedData.length\n  }\n};"
       },
       "id": "metric-calculator",
       "name": "Calculate Metrics",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        900,
+        740,
         240
       ]
     },
@@ -89,11 +89,11 @@
             },
             {
               "name": "messages",
-              "value": "={{ [\n  {\"role\": \"system\", \"content\": \"You are a senior marketing analyst. Analyze the following ad performance data. Provide a summary of performance, identify the best performing campaign, and give 3 actionable recommendations to improve ROI. Output in Markdown format.\"}, \n  {\"role\": \"user\", \"content\": $json.tableString}\n] }}"
+              "value": "={{ [\n  {\"role\": \"system\", \"content\": \"你是一位資深數位行銷分析師。請分析提供的廣告數據。請用繁體中文撰寫，結構要清晰美觀。包含：1. 績效總結表 2. 獲利最高的廣告活動 3. 三個具體的優化建議。請直接輸出 Markdown 內容，不要有任何多餘的開場白或自我介紹。\"}, \n  {\"role\": \"user\", \"content\": $json.tableString}\n] }}"
             },
             {
               "name": "temperature",
-              "value": 0.7
+              "value": 0.5
             }
           ]
         },
@@ -104,7 +104,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        1120,
+        920,
         240
       ],
       "retryOnFail": true,
@@ -119,11 +119,25 @@
     },
     {
       "parameters": {
+        "markdown": "={{ $json.choices[0].message.content }}",
+        "options": {}
+      },
+      "id": "markdown-to-html",
+      "name": "Markdown to HTML",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        240
+      ]
+    },
+    {
+      "parameters": {
         "authentication": "gmailOAuth2",
         "sendTo": "user@example.com",
-        "subject": "={{ 'Daily Ad Performance Report - ' + new Date().toISOString().split('T')[0] }}",
-        "emailType": "text",
-        "message": "={{ $json.choices[0].message.content }}",
+        "subject": "={{ '每日廣告績效報告 - ' + new Date().toISOString().split('T')[0] }}",
+        "emailType": "html",
+        "html": "={{ '<html><body style=\"font-family: sans-serif;\">' + $json.data + '<br><hr><p style=\"color: #888; font-size: 12px;\">報告生成：Antigravity IDE</p></body></html>' }}",
         "options": {}
       },
       "id": "send-email",
@@ -131,7 +145,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1340,
+        1280,
         240
       ],
       "credentials": {
@@ -177,6 +191,17 @@
       ]
     },
     "Cerebras AI Analysis": {
+      "main": [
+        [
+          {
+            "node": "Markdown to HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown to HTML": {
       "main": [
         [
           {
