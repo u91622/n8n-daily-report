@@ -40,6 +40,19 @@
 5. **啟用工作流**:
    - 測試成功後，將右上角的 "Inactive" 切換為 "Active"。
 
-## 常見問題
-- **Cerebras API 失敗?**: 檢查 API Key 是否正確，或是否超過配額。工作流已設定自動重試 3 次。
-- **Google Sheet 讀不到?**: 確保 n8n 有權限存取該檔案 (通常在 OAuth 設定時授權)。
+## 常見問題與疑難排解
+
+### 1. 匯入後找不到「認證 (Credential)」輸入框？
+這可能是因為 n8n 匯入 JSON 時的版本差異或 UI 顯示 Bug。如果打開 Google Sheets 或 Gmail 節點卻沒看到認證選擇框：
+- **解決方法 A**：點擊節點視窗上方的 **「Settings」** 分頁，檢查是否有 **「Authentication」** 選項可以開啟。
+- **解決方法 B (最快解)**：直接刪除該節點，重新從右側 `+` 號搜尋並拉入一個全新的 Gmail 或 Google Sheets 節點。新節點一定會顯示認證選擇框。
+- **手動填入公式**：如果手動拉新節點，請確保 Gmail 節點的 `HTML` 欄位填入公式：`{{ $json.html }}`。
+
+### 2. Cerebras API 失敗?
+檢查 API Key 是否正確（格式須為 `Bearer YOUR_KEY`），或是否超過配額。工作流已設定自動重試 3 次。
+
+### 3. Google Sheet 讀不到?
+確保您已經在 Google Sheets 節點中選擇了正確的工作表 ID。
+
+---
+*Created using Antigravity IDE*
