@@ -1,5 +1,5 @@
 {
-  "name": "Daily Ad Reporting (AI Enhanced - Robust)",
+  "name": "Daily Ad Reporting (AI Enhanced - HTML Fixed)",
   "nodes": [
     {
       "parameters": {
@@ -118,7 +118,7 @@
     },
     {
       "parameters": {
-        "jsCode": "/**\n * A simple Markdown to HTML converter in pure JS\n * for better compatibility across n8n versions.\n */\nlet md = $json.choices[0].message.content;\n\nlet html = md\n  .replace(/### (.*)/g, '<h3>$1</h3>')\n  .replace(/## (.*)/g, '<h2>$1</h2>')\n  .replace(/# (.*)/g, '<h1>$1</h1>')\n  .replace(/\\*\\*(.*)\\*\\*/g, '<b>$1</b>')\n  .replace(/\\*(.*)\\*/g, '<i>$1</i>')\n  .replace(/\\|/g, '│') // Simple replacement for table borders\n  .replace(/\\n/g, '<br>');\n\n// Wrap in a simple container\nconst finalHtml = `<div style=\"font-family: sans-serif; line-height: 1.6; color: #333;\">${html}</div>`;\n\nreturn { html: finalHtml };"
+        "jsCode": "/**\n * A simple Markdown to HTML converter in pure JS\n */\nlet md = $json.choices[0].message.content;\n\nlet html = md\n  .replace(/### (.*)/g, '<h3>$1</h3>')\n  .replace(/## (.*)/g, '<h2>$1</h2>')\n  .replace(/# (.*)/g, '<h1>$1</h1>')\n  .replace(/\\*\\*(.*)\\*\\*/g, '<b>$1</b>')\n  .replace(/\\*(.*)\\*/g, '<i>$1</i>')\n  .replace(/\\|/g, '│') \n  .replace(/\\n/g, '<br>');\n\nconst finalHtml = `<div style=\"font-family: sans-serif; line-height: 1.6; color: #333;\">${html}<br><hr><p style=\"color: #888; font-size: 12px;\">報告生成：Antigravity IDE</p></div>`;\n\nreturn { html: finalHtml };"
       },
       "id": "format-to-html",
       "name": "Format to HTML",
@@ -134,7 +134,7 @@
         "sendTo": "u91622@gmail.com",
         "subject": "={{ '每日廣告績效報告 - ' + new Date().toISOString().split('T')[0] }}",
         "emailType": "html",
-        "html": "={{ $json.html + '<br><hr><p style=\"color: #888; font-size: 12px;\">報告生成：Antigravity IDE</p>' }}",
+        "html": "={{ $json.html }}",
         "options": {}
       },
       "id": "send-email",
