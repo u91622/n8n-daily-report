@@ -1,0 +1,191 @@
+{
+  "name": "Daily Ad Reporting (AI Enhanced)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Daily 9AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        460,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "googleSheetsOAuth2",
+        "documentId": {
+          "__rl": true,
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "fromData"
+        },
+        "options": {}
+      },
+      "id": "google-sheets",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        680,
+        240
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "googleSheetsOAuth2": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Calculate metrics and format data for AI\nconst items = $input.all();\nconst formattedData = [];\n\nfor (const item of items) {\n  const json = item.json;\n  const impressions = parseFloat(json.Impressions);\n  const clicks = parseFloat(json.Clicks);\n  const conversions = parseFloat(json.Conversions);\n  const spend = parseFloat(json.Spend);\n\n  const ctr = impressions > 0 ? ((clicks / impressions) * 100).toFixed(2) : 0;\n  const cvr = clicks > 0 ? ((conversions / clicks) * 100).toFixed(2) : 0;\n  const cpa = conversions > 0 ? (spend / conversions).toFixed(2) : 0;\n\n  formattedData.push({\n    Date: json.Date,\n    Campaign: json.Campaign,\n    Impressions: impressions,\n    Clicks: clicks,\n    Conversions: conversions,\n    Spend: spend,\n    CTR: ctr + '%',\n    CVR: cvr + '%',\n    CPA: '$' + cpa\n  });\n}\n\n// Create a markdown table string for the AI prompt\nlet tableString = '| Date | Campaign | Cost | CTR | CVR | CPA |\\n|---|---|---|---|---|---|\\n';\nformattedData.forEach(row => {\n  tableString += `| ${row.Date} | ${row.Campaign} | $${row.Spend} | ${row.CTR} | ${row.CVR} | ${row.CPA} |\\n`;\n});\n\nreturn {\n  json: {\n    tableString,\n    totalRecords: formattedData.length\n  }\n};"
+      },
+      "id": "metric-calculator",
+      "name": "Calculate Metrics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cerebras.ai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "llama3.1-70b"
+            },
+            {
+              "name": "messages",
+              "value": "={{ [\n  {\"role\": \"system\", \"content\": \"You are a senior marketing analyst. Analyze the following ad performance data. Provide a summary of performance, identify the best performing campaign, and give 3 actionable recommendations to improve ROI. Output in Markdown format.\"}, \n  {\"role\": \"user\", \"content\": $json.tableString}\n] }}"
+            },
+            {
+              "name": "temperature",
+              "value": 0.7
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cerebras-ai",
+      "name": "Cerebras AI Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1120,
+        240
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YOUR_CEREBRAS_CREDENTIAL_ID",
+          "name": "Cerebras API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "gmailOAuth2",
+        "sendTo": "user@example.com",
+        "subject": "={{ 'Daily Ad Performance Report - ' + new Date().toISOString().split('T')[0] }}",
+        "emailType": "text",
+        "message": "={{ $json.choices[0].message.content }}",
+        "options": {}
+      },
+      "id": "send-email",
+      "name": "Send Email Report",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1340,
+        240
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "Gmail Account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Daily 9AM Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Calculate Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Metrics": {
+      "main": [
+        [
+          {
+            "node": "Cerebras AI Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cerebras AI Analysis": {
+      "main": [
+        [
+          {
+            "node": "Send Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
