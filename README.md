@@ -1,22 +1,22 @@
 # N8N 每日廣告報告自動化工作流 (AI Enhanced)
 
-這是一個自動化的 n8n 工作流，旨在幫助你節省每日整理廣告報表的時間。它會自動從 Google Sheets 抓取數據，計算 CTR 與 CVR，並使用 Cerebras AI 生成洞察報告，最後寄送 Email 給你。
+這個專案利用Antigravity IDE進行製作n8n工作流，旨在節省每日整理廣告報表的時間。其自動從 Google Sheets 擷取資料，計算 CTR 與 CVR，並使用 Cerebras AI 生成洞察報告，最後寄送 Email。
 
 ## 功能特色
 - **自動化排程**：每日早上 9:00 自動執行。
-- **數據計算**：自動計算點擊率 (CTR)、轉換率 (CVR) 與每次轉換成本 (CPA)。
-- **AI 洞察**：使用 `gpt-oss-120b` (via Cerebras) 分析數據並提供優化建議。
+- **資料計算**：自動計算點選率 (CTR)、轉換率 (CVR) 與每次轉換成本 (CPA)。
+- **AI 洞察**：使用 `gpt-oss-120b` (via Cerebras) 分析資料並提供最佳化建議。
 - **Self-healing**：針對 API 請求失敗 (如 Google Sheets, AI 服務) 內建 Retry 機制，提高穩定性。
 
 ## 前置準備
 你需要在 n8n 中準備好以下 Credentials：
-1. **Google Sheets OAuth2 API** (用於讀取數據)
-2. **Cerebras API Key** (用於 AI 分析) - [申請網址](https://cerebras.ai/)
+1. **Google Sheets OAuth2 API** (用於讀取資料)
+2. **Cerebras API Key** (用於 AI 分析)
 3. **Gmail OAuth2 API** (用於寄信)
 
 ## 檔案說明
 - `workflow.json`: n8n 工作流檔案，請直接 Import 進 n8n。
-- `sample_data.csv`: 範例數據，請上傳至你的 Google Drive 並轉為 Google Sheet。
+- `sample_data.csv`: 範例資料，請上傳至你的 Google Drive 並轉為 Google Sheet。
 
 ## 安裝步驟
 1. **Import Workflow**:
@@ -25,16 +25,16 @@
    - 選擇本專案中的 `workflow.json`。
 
 2. **設定 Credentials**:
-   - 雙擊 **Google Sheets** 節點，選擇你的 Google Sheets Credential。
-   - 雙擊 **Cerebras AI Analysis** 節點，在 Authentication 選擇 `Header Auth`，並填入你的 API Key (Header Name: `Authorization`, Value: `Bearer <YOUR_KEY>`)。
-   - 雙擊 **Send Email Report** 節點，選擇你的 Gmail Credential。
+   - 點兩下 **Google Sheets** 節點，選擇你的 Google Sheets Credential。
+   - 點兩下 **Cerebras AI Analysis** 節點，在 Authentication 選擇 `Header Auth`，並填入你的 API Key (Header Name: `Authorization`, Value: `Bearer <YOUR_KEY>`)。
+   - 點兩下 **Send Email Report** 節點，選擇你的 Gmail Credential。
 
 3. **設定 Google Sheet 來源**:
    - 在 Google Sheets 節點中，選擇你的試算表檔案與工作表。
    - 確保你的 Sheet 欄位包含：`Date`, `Campaign`, `Impressions`, `Clicks`, `Conversions`, `Spend` (可參考 `sample_data.csv`)。
 
 4. **測試運行**:
-   - 點擊下方 "Execute Workflow" 按鈕。
+   - 點選下方 "Execute Workflow" 按鈕。
    - 檢查是否收到包含 AI 分析的 Email。
 
 5. **啟用工作流**:
@@ -43,6 +43,3 @@
 ## 常見問題
 - **Cerebras API 失敗?**: 檢查 API Key 是否正確，或是否超過配額。工作流已設定自動重試 3 次。
 - **Google Sheet 讀不到?**: 確保 n8n 有權限存取該檔案 (通常在 OAuth 設定時授權)。
-
----
-*Created using Antigravity IDE*
