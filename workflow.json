@@ -1,5 +1,5 @@
 {
-  "name": "Daily Ad Reporting (AI Enhanced - HTML Fixed)",
+  "name": "Daily Ad Reporting (AI Enhanced - Env Sync)",
   "nodes": [
     {
       "parameters": {
@@ -17,20 +17,19 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.1,
       "position": [
-        380,
-        240
+        0,
+        0
       ]
     },
     {
       "parameters": {
-        "authentication": "googleSheetsOAuth2",
         "documentId": {
           "__rl": true,
-          "mode": "id"
+          "mode": "list"
         },
         "sheetName": {
           "__rl": true,
-          "mode": "fromData"
+          "mode": "list"
         },
         "options": {}
       },
@@ -39,14 +38,14 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "position": [
-        560,
-        240
+        224,
+        0
       ],
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 5000,
       "credentials": {
-        "googleSheetsOAuth2": {
+        "googleSheetsOAuth2Api": {
           "id": "",
           "name": ""
         }
@@ -61,8 +60,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        740,
-        240
+        448,
+        0
       ]
     },
     {
@@ -104,8 +103,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        920,
-        240
+        672,
+        0
       ],
       "retryOnFail": true,
       "maxTries": 3,
@@ -127,14 +126,13 @@
       "type": "n8n-nodes-base.markdown",
       "typeVersion": 1,
       "position": [
-        1100,
-        240
+        896,
+        0
       ]
     },
     {
       "parameters": {
-        "authentication": "gmailOAuth2",
-        "sendTo": "user@example.com",
+        "sendTo": "u91622@gmail.com",
         "subject": "={{ '每日廣告績效報告 - ' + new Date().toISOString().split('T')[0] }}",
         "emailType": "html",
         "html": "={{ '<html><body style=\"font-family: sans-serif;\">' + $json.data + '<br><hr><p style=\"color: #888; font-size: 12px;\">報告生成：Antigravity IDE</p></body></html>' }}",
@@ -143,10 +141,10 @@
       "id": "send-email",
       "name": "Send Email Report",
       "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
+      "typeVersion": 2.2,
       "position": [
-        1280,
-        240
+        1120,
+        0
       ],
       "credentials": {
         "gmailOAuth2": {
