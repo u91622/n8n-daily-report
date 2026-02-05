@@ -1,5 +1,5 @@
 {
-  "name": "Daily Ad Reporting (AI Enhanced - Env Sync)",
+  "name": "Daily Ad Reporting (AI Enhanced - Final)",
   "nodes": [
     {
       "parameters": {
@@ -38,7 +38,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "position": [
-        224,
+        200,
         0
       ],
       "retryOnFail": true,
@@ -60,7 +60,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        448,
+        400,
         0
       ]
     },
@@ -103,7 +103,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        672,
+        600,
         0
       ],
       "retryOnFail": true,
@@ -118,6 +118,7 @@
     },
     {
       "parameters": {
+        "mode": "markdownToHtml",
         "markdown": "={{ $json.choices[0].message.content }}",
         "options": {}
       },
@@ -126,7 +127,7 @@
       "type": "n8n-nodes-base.markdown",
       "typeVersion": 1,
       "position": [
-        896,
+        800,
         0
       ]
     },
@@ -143,7 +144,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        1120,
+        1000,
         0
       ],
       "credentials": {
