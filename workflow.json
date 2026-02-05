@@ -1,5 +1,5 @@
 {
-  "name": "Daily Ad Reporting (AI Enhanced - HTML Clean)",
+  "name": "Daily Ad Reporting (AI Enhanced - HTML Fixed)",
   "nodes": [
     {
       "parameters": {
@@ -44,7 +44,13 @@
       ],
       "retryOnFail": true,
       "maxTries": 3,
-      "waitBetweenTries": 5000
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "googleSheetsOAuth2": {
+          "id": "",
+          "name": ""
+        }
+      }
     },
     {
       "parameters": {
@@ -103,7 +109,13 @@
       ],
       "retryOnFail": true,
       "maxTries": 3,
-      "waitBetweenTries": 5000
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": ""
+        }
+      }
     },
     {
       "parameters": {
@@ -135,7 +147,13 @@
       "position": [
         1280,
         240
-      ]
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": ""
+        }
+      }
     }
   ],
   "connections": {
