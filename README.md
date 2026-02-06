@@ -1,6 +1,6 @@
 # N8N 每日廣告報告自動化工作流
 
-這個專案利用Antigravity IDE進行製作n8n工作流，旨在節省每日整理廣告報表的時間。其自動從 Google Sheets 擷取資料，計算 CTR 與 CVR，並使用 Cerebras的API使用GPT模型生成洞察報告，最後寄送 Email。
+這個專案透過Antigravity IDE設計n8n工作流的雛形，旨在節省每日整理廣告報表的時間。其自動從 Google Sheets 擷取資料，計算 CTR 與 CVR，並使用 Cerebras的API使用GPT模型生成洞察報告，最後寄送 Email。
 
 ## 功能特色
 - **自動化排程**：每日早上 9:00 自動執行。
