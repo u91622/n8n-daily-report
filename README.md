@@ -7,6 +7,10 @@
 - **資料計算**：自動計算點選率 (CTR)、轉換率 (CVR) 與每次轉換成本 (CPA)。
 - **AI 洞察**：使用 `gpt-oss-120b` (via Cerebras) 分析資料並提供最佳化建議。
 - **Self-healing**：針對 API 請求失敗 (如 Google Sheets, AI 服務) 內建 Retry 機制，提高穩定性。
+<img width="1280" height="725" alt="image" src="https://github.com/user-attachments/assets/e7182f03-efd8-4281-b2bd-6d3f307052f0" />
+<img width="1280" height="804" alt="image" src="https://github.com/user-attachments/assets/7713f2be-8083-49af-b607-e662a46676ab" />
+<img width="1280" height="735" alt="image" src="https://github.com/user-attachments/assets/e46aee9e-f1cd-4f7f-b3eb-1d710f14ee60" />
+
 
 ## 前置準備
 你需要在 n8n 中準備好以下 Credentials：
